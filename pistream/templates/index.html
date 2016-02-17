@@ -13,7 +13,30 @@
     </head>
 
     <body>
-        <h1 class="text-center">Hello World</h1>
-
+        <div class="jumbotron" ng-controller="pistream.PiStreamCtl as PiStreamCtl">
+            <div class="container">
+                <h1>Processes:</h1>
+                <p>
+                    {{ PiStreamCtl.processes.length }} processes
+                </p>
+                <p ng-repeat="process in PiStreamCtl.processes">
+                    {{ process.cmdline.join(' ') }}<a class="btn btn-primary btn-lg">Learn more</a>
+                </p>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
     </body>
 </html>

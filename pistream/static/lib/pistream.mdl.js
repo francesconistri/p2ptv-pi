@@ -4,6 +4,6 @@ import PiStreamCtl from './pistream.ctl';
 
 var pistream = angular.module('pistream', []);
 
-pistream.controller(PiStreamCtl);
+pistream.controller('pistream.PiStreamCtl', PiStreamCtl);
 
 export default pistream;

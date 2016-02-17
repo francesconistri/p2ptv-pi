@@ -1,4 +1,7 @@
+import os
 import argparse
+
+import conf
 
 
 def get_args():
@@ -17,6 +20,7 @@ if __name__ == "__main__":
     from handlers import handlers
     args = get_args()
     application = tornado.web.Application(handlers=handlers, debug=args.debug,
-                                          autoreload=args.debug)
+                                          autoreload=args.debug,
+                                          template_path=os.path.join(conf.BASE_PATH, 'templates'))
     application.listen(port=args.port, address=args.bind)
     tornado.ioloop.IOLoop.instance().start()

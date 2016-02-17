@@ -1,4 +1,5 @@
 import 'bootstrap'
+import 'bootstrap/css/bootstrap.css!';
 
 import angular from 'angular';
 
