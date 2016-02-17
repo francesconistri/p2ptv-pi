@@ -1,4 +1,5 @@
 import os
+import json
 import psutil
 
 import tornado.web
@@ -7,8 +8,25 @@ import tornado.template
 import conf
 
 
+def filtered_processes(*terms):
+    for proc in psutil.process_iter():
+        for term in terms:
+            try:
+                if term in proc.name():
+                    yield proc
+                    break
+            except psutil.NoSuchProcess:
+                continue
+
+
 class SopcastHandler(tornado.web.RequestHandler):
-    pass
+
+    def post(self):
+        url = json.loads(self.request.body).get('url')
+        for proc in filtered_processes('sc-sp', 'sopcast', 'qemu', 'mplayer'):
+            proc.kill()
+
+        self.finish({'url': url})
 
 
 class ProcessRootHandler(tornado.web.RequestHandler):
@@ -17,7 +35,7 @@ class ProcessRootHandler(tornado.web.RequestHandler):
         response = {
             'processes': []
         }
-        for proc in psutil.process_iter():
+        for proc in filtered_processes('sc-sp', 'sopcast', 'qemu', 'mplayer'):
             if self.is_python(proc):
                 response['processes'].append(proc.as_dict(['cmdline']))
         self.finish(response)
