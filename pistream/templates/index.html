@@ -22,13 +22,15 @@
                 <p ng-repeat="process in PiStreamCtl.processes">
                     {{ process.cmdline.join(' ') }}<a class="btn btn-primary btn-lg">Learn more</a>
                 </p>
-                <div class="input-group">
-                  <span class="input-group-addon">url</span>
-                  <input type="text" class="form-control" placeholder="Insert url to load" ng-model="PiStreamCtl.url">
-                  <button type="button" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">
-                      Open
-                  </button>
-                </div>
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="text" class="form-control" id="formUrl" placeholder="Insert URL" ng-model="PiStreamCtl.url">
+                  </div>
+                  <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
+                </form>
+
+                
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>

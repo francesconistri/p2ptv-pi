@@ -10,18 +10,28 @@ class PiStreamCtl {
     }
 
     loadProcesses () {
-        this._.$http.get('/api/process')
+        this._.$http.get('/api/sopcast')
             .then(
-                (r) => {this.processes = r.data.processes;}
+                (r) => {this.sopcast = r.data;}
+            );
+        this._.$http.get('/api/mplayer')
+            .then(
+                (r) => {this.mplayer = r.data;}
             );
     }
-    openUrl () {
+
+    launchSopcast () {
         this._.$http.post('/api/sopcast', {url: this.url}).then(loadProcesses);
     }
+
+    launchMplayer () {
+        this._.$http.post('/api/mplayer', {url: this.url}).then(loadProcesses);
+    }
+
 
 
 }
 
-PiStreamCtl.$inject = ['$http'];
+PiStreamCtl.$inject = ['$http', ];
 
 export default PiStreamCtl;
