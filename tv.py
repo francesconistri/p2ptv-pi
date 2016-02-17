@@ -3,7 +3,7 @@ import argparse
 import urlparse
 import subprocess
 
-BASEDIR = os.path.dirname(os.path.abspath(__file__))
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def url_type(uri):
@@ -18,11 +18,11 @@ def url_type(uri):
 
 def get_sopcast_command(args):
     cmds = [
-        os.path.join(BASEDIR, 'sopcast/qemu-i386'),
-        os.path.join(BASEDIR, 'sopcast/lib/ld-linux.so.2'),
+        os.path.join(BASE_PATH, 'sopcast/qemu-i386'),
+        os.path.join(BASE_PATH, 'sopcast/lib/ld-linux.so.2'),
         '--library-path',
-        os.path.join(BASEDIR, 'sopcast/lib'),
-        os.path.join(BASEDIR,  'sopcast/sp-sc-auth'),
+        os.path.join(BASE_PATH, 'sopcast/lib'),
+        os.path.join(BASE_PATH,  'sopcast/sp-sc-auth'),
         args.uri,
         str(args.sopcast_port),
         str(args.streaming_port)

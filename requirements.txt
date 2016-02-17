@@ -1,3 +1,4 @@
 tornado==3.2
 circus==0.13.0
 circus-web==1.0.0
+psutil==3.4.2

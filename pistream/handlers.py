@@ -1,27 +1,47 @@
+import os
+import psutil
+
 import tornado.web
-import circus.process
+import tornado.template
 
 import conf
+
+loader = tornado.template.Loader(os.path.join(conf.BASE_PATH, 'templates'))
 
 
 class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
-        self.finish({'status': 'ok'})
+        self.finish(loader.load('index.html').generate())
 
 
 class SopcastHandler(tornado.web.RequestHandler):
+    pass
+
+
+class ProcessRootHandler(tornado.web.RequestHandler):
 
     def get(self):
-        pass
+        response = {
+            'contents': []
+        }
+        for proc in psutil.process_iter():
+            response['contents'].append(proc.as_dict())
+        self.finish(response)
 
-    def get_process(self):
-        cmd = ''
-        process = circus.process.Process('sopcast')
+
+class ProcessHandler(tornado.web.RequestHandler):
+
+    def get(self, pid):
+        pid = int(pid)
+        process = psutil.Process(pid)
+        self.finish(process.as_dict())
 
 
 handlers = (
     (r'/', IndexHandler),
-    (r'/api/sopcast', IndexHandler),
+    (r'/api/process', ProcessRootHandler),
+    (r'/api/process/([0-9]+)', ProcessHandler),
+    (r'/api/sopcast', SopcastHandler),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': conf.STATIC_ROOT}),
 )
