@@ -40,7 +40,7 @@
                             <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
                         </form>
                     </div>
-                    <div class="col-md-6" ng-if="!PiStreamCtl.sopcast.pid">
+                    <div class="col-md-6" ng-if="PiStreamCtl.sopcast.pid">
                         <h3>Streaming on:</h3>
                         <a ng-href="{{ PiStreamCtl.getStreamingUrl() }}"><p ng-cloak>{{ PiStreamCtl.getStreamingUrl() }}</p></a>
                         <p ng-cloak>{{ PiStreamCtl.sopcast }}</p>
