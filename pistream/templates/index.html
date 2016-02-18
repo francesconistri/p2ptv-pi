@@ -4,47 +4,80 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Title Page</title>
+        <title>piStream</title>
         <script src="/static/jspm_packages/system.js"></script>
         <script src="/static/config.js"></script>
         <script>
             System.import('lib/main.js');
         </script>
+        <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+          display: none !important;
+        }
+        </style>
     </head>
 
     <body>
         <div class="jumbotron" ng-controller="pistream.PiStreamCtl as PiStreamCtl">
-            <div class="container">
-                <h1>Processes:</h1>
-                <p>
-                    {{ PiStreamCtl.processes.length }} processes
-                </p>
-                <p ng-repeat="process in PiStreamCtl.processes">
-                    {{ process.cmdline.join(' ') }}<a class="btn btn-primary btn-lg">Learn more</a>
-                </p>
-                <form class="form-inline">
-                  <div class="form-group">
-                    <label for="url">URL</label>
-                    <input type="text" class="form-control" id="formUrl" placeholder="Insert URL" ng-model="PiStreamCtl.url">
-                  </div>
-                  <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
-                </form>
+            <div class="container" ng-if="PiStreamCtl.loaded">
 
-                
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Sopcast: </h2>
+                    </div>
+                    <div class="col-md-6">
+                        <form>
+                            <legend>Launch New Stream</legend>
+
+                            <div class="form-group">
+
+                                <label for="url">URL</label>
+                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.url">
+
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6" ng-if="!PiStreamCtl.sopcast.pid">
+                        <h3>Streaming on:</h3>
+                        <a ng-href="{{ PiStreamCtl.getStreamingUrl() }}"><p ng-cloak>{{ PiStreamCtl.getStreamingUrl() }}</p></a>
+                        <p ng-cloak>{{ PiStreamCtl.sopcast }}</p>
+                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.killSopcast()">Kill</button>
+                    </div>
+
+
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Mplayer: </h2>
+                    </div>
+                    <div class="col-md-6">
+                        <form>
+                            <legend>Run Player</legend>
+
+                            <div class="form-group">
+
+                                <label for="url">URL</label>
+                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.url">
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6" ng-if="PiStreamCtl.mplayer.pid">
+                        <p ng-cloak>
+                            <span class="badge">{{ PiStreamCtl.mplayer.pid }}</span>
+                            {{ PiStreamCtl.mplayer.cmdline.join(' ') }}
+
+                        </p>
+                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.killMplayer()">Kill</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </body>

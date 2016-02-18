@@ -32,7 +32,8 @@ class ConfigHandler(tornado.web.RequestHandler):
     def get(self):
         self.finish({
             'DEFAULT_STREAMING_PORT': conf.DEFAULT_STREAMING_PORT,
-            'DEFAULT_COMMUNICATION_PORT': conf.DEFAULT_COMMUNICATION_PORT
+            'DEFAULT_STREAMING_HOST': conf.DEFAULT_STREAMING_HOST,
+            'DEFAULT_COMMUNICATION_PORT': conf.DEFAULT_COMMUNICATION_PORT,
         })
 
 
@@ -138,7 +139,8 @@ class MplayerHandler(ProcessHandler):
             '1',
             '--video_queue',
             '1',
-            'http://127.0.0.1:3333/tv.asf',
+            'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
+                                                 port=conf.DEFAULT_STREAMING_PORT),
         ]
         return cmds
 
