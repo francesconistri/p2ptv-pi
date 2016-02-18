@@ -32,12 +32,12 @@
                             <div class="form-group">
 
                                 <label for="url">URL</label>
-                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.url">
+                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.sopcast_url">
 
                             </div>
 
 
-                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
+                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.launchSopcast()">Open</button>
                         </form>
                     </div>
                     <div class="col-md-6" ng-if="PiStreamCtl.sopcast.pid">
@@ -61,11 +61,11 @@
                             <div class="form-group">
 
                                 <label for="url">URL</label>
-                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.url">
+                                <input type="text" class="form-control" id="url" placeholder="Insert URL" ng-model="PiStreamCtl.mplayer_url">
                             </div>
 
 
-                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.openUrl()">Open</button>
+                            <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.launchMplayer()">Open</button>
                         </form>
                     </div>
                     <div class="col-md-6" ng-if="PiStreamCtl.mplayer.pid">

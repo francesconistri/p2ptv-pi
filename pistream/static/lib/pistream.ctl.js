@@ -12,7 +12,6 @@ function PiStreamCtl($q, $http, $interval) {
         loadProcesses().then(function() {
             self.loaded = true;
         });
-        self.url = null;
 
         $interval(loadProcesses, refresh);
 
@@ -39,11 +38,11 @@ function PiStreamCtl($q, $http, $interval) {
     }
 
     self.launchSopcast = function() {
-        $http.post('/api/sopcast', {url: self.url}).then(loadProcesses);
+        $http.post('/api/sopcast', {url: self.sopcast_url}).then(loadProcesses);
     };
 
     self.launchMplayer = function() {
-        $http.post('/api/mplayer', {url: self.url}).then(loadProcesses);
+        $http.post('/api/mplayer', {url: self.mplayer_url}).then(loadProcesses);
     }
 
     self.killSopcast = function() {

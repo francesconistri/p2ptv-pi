@@ -139,8 +139,8 @@ class MplayerHandler(ProcessHandler):
             '1',
             '--video_queue',
             '1',
-            'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
-                                                 port=conf.DEFAULT_STREAMING_PORT),
+            self.get_body_argument('url') or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
+                                                                                  port=conf.DEFAULT_STREAMING_PORT),
         ]
         return cmds
 
