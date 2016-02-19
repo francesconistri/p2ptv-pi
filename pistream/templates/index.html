@@ -43,7 +43,11 @@
                     <div class="col-md-6" ng-if="PiStreamCtl.sopcast.pid">
                         <h3>Streaming on:</h3>
                         <a ng-href="{{ PiStreamCtl.getStreamingUrl() }}"><p ng-cloak>{{ PiStreamCtl.getStreamingUrl() }}</p></a>
-                        <p ng-cloak>{{ PiStreamCtl.sopcast }}</p>
+                        <p ng-cloak>
+                            <span class="badge">{{ PiStreamCtl.sopcast.pid }}</span>
+                            {{ PiStreamCtl.sopcast.cmdline.join(' ') }}
+
+                        </p>
                         <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.killSopcast()">Kill</button>
                     </div>
 

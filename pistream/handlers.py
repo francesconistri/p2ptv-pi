@@ -1,11 +1,15 @@
 import os
 import json
 import psutil
+from subprocess import PIPE
 
 import tornado.web
+import tornado.process
 import tornado.template
 
 import conf
+
+STREAM = tornado.process.Subprocess.STREAM
 
 sopcast_process = None
 mplayer_process = None
@@ -49,22 +53,28 @@ class ProcessHandler(tornado.web.RequestHandler):
         def get(self):
             proc = self.get_global_process()
             if proc:
-                return self.finish(proc.as_dict())
+                proc = psutil.Process(proc.pid)
+                return self.finish(proc.as_dict(['pid', 'cmdline']))
             for proc in filtered_processes(*self.PROCESS_TERMS):
-                return self.finish(proc.as_dict())
+                return self.finish(proc.as_dict(['pid', 'cmdline']))
             self.finish({})
 
         def post(self):
             self._delete()
-            # TODO: run sopcast
-            proc = psutil.Popen(self.get_command())
+            proc = tornado.process.Subprocess(self.get_command(),
+                                              stdout=STREAM, stderr=STREAM)
             self.set_global_process(proc)
-            self.finish(proc.as_dict())
+            try:
+                self.finish(psutil.Process(proc.pid).as_dict(['pid', 'cmdline']))
+            except psutil.NoSuchProcess:
+                self.set_global_process(None)
+                self.set_status(400)
+                self.finish({})
 
         def _delete(self):
             proc = self.get_global_process()
             if proc:
-                proc.kill()
+                psutil.Process(proc.pid).kill()
             else:
                 killgrep(*self.PROCESS_TERMS)
             self.set_global_process(None)
@@ -92,11 +102,11 @@ class SopcastHandler(ProcessHandler):
 
     def get_args(self):
         data = json.loads(self.request.body)
-        params = ['url', 'stream_port', 'com_port']
+        params = ['url', 'streaming_port', 'sopcast_port']
         args = {k: data.get(k) or None for k in params}
         assert args['url']
-        args['stream_port'] = args['stream_port'] or conf.DEFAULT_STREAMING_PORT
-        args['com_port'] = args['com_port'] or conf.DEFAULT_COMMUNICATION_PORT
+        args['streaming_port'] = args['streaming_port'] or conf.DEFAULT_STREAMING_PORT
+        args['sopcast_port'] = args['sopcast_port'] or conf.DEFAULT_COMMUNICATION_PORT
         return args
 
     def get_command(self):
@@ -139,7 +149,7 @@ class MplayerHandler(ProcessHandler):
             '1',
             '--video_queue',
             '1',
-            self.get_body_argument('url') or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
+            self.get_body_argument('url', None) or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
                                                                                   port=conf.DEFAULT_STREAMING_PORT),
         ]
         return cmds
