@@ -138,7 +138,7 @@ class MplayerHandler(ProcessHandler):
         return mplayer_process
 
     def get_command(self):
-
+	data = json.loads(self.request.body)
         cmds = [
             'omxplayer',
             '--audio_fifo',
@@ -149,7 +149,7 @@ class MplayerHandler(ProcessHandler):
             '1',
             '--video_queue',
             '1',
-            self.get_body_argument('url', None) or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
+            data.get('mplayer_url', None) or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
                                                                                   port=conf.DEFAULT_STREAMING_PORT),
         ]
         return cmds

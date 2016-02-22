@@ -42,7 +42,7 @@ function PiStreamCtl($q, $http, $interval) {
     };
 
     self.launchMplayer = function() {
-        $http.post('/api/mplayer', {url: self.mplayer_url}).then(loadProcesses);
+        $http.post('/api/mplayer', {mplayer_url: self.mplayer_url}).then(loadProcesses);
     }
 
     self.killSopcast = function() {
