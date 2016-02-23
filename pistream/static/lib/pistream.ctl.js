@@ -22,12 +22,10 @@ function PiStreamCtl($q, $http, $interval) {
             $http.get('/api/sopcast')
                 .then(function(r) {
                         self.sopcast = r.data;
-                        console.log(self)
                     }),
             $http.get('/api/mplayer')
                 .then(function(r) {
                     self.mplayer = r.data;
-                    console.log(self)
                 }),
             $http.get('/api/config')
                 .then(
@@ -45,8 +43,8 @@ function PiStreamCtl($q, $http, $interval) {
         $http.post('/api/mplayer', {mplayer_url: self.mplayer_url}).then(loadProcesses);
     }
 
-    self.killSopcast = function() {
-        $http['delete']('/api/sopcast').then(loadProcesses);
+    self.kill = function(proc) {
+        $http.post('/api/kill', {pid: proc.pid}).then(loadProcesses);
     }
 
     self.killMplayer = function() {

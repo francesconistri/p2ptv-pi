@@ -40,15 +40,13 @@
                             <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.launchSopcast()">Open</button>
                         </form>
                     </div>
-                    <div class="col-md-6" ng-if="PiStreamCtl.sopcast.pid">
-                        <h3>Streaming on:</h3>
-                        <a ng-href="{{ PiStreamCtl.getStreamingUrl() }}"><p ng-cloak>{{ PiStreamCtl.getStreamingUrl() }}</p></a>
+                    <div class="col-md-6" ng-repeat="proc in PiStreamCtl.sopcast.processes">
                         <p ng-cloak>
-                            <span class="badge">{{ PiStreamCtl.sopcast.pid }}</span>
-                            {{ PiStreamCtl.sopcast.cmdline.join(' ') }}
+                            <span class="badge">{{ proc.pid }}</span>
+                            {{ proc.cmdline.join(' ') }}
 
                         </p>
-                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.killSopcast()">Kill</button>
+                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.kill(proc)">Kill</button>
                     </div>
 
 
@@ -72,13 +70,13 @@
                             <button type="submit" class="btn btn-primary" ng-click="PiStreamCtl.launchMplayer()">Open</button>
                         </form>
                     </div>
-                    <div class="col-md-6" ng-if="PiStreamCtl.mplayer.pid">
+                    <div class="col-md-6" ng-repeat="proc in PiStreamCtl.mplayer.processes">
                         <p ng-cloak>
-                            <span class="badge">{{ PiStreamCtl.mplayer.pid }}</span>
-                            {{ PiStreamCtl.mplayer.cmdline.join(' ') }}
+                            <span class="badge">{{ proc.pid }}</span>
+                            {{ proc.cmdline.join(' ') }}
 
                         </p>
-                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.killMplayer()">Kill</button>
+                        <button type="button" class="btn btn-danger" ng-click="PiStreamCtl.kill(proc)">Kill</button>
                     </div>
                 </div>
 

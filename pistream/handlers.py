@@ -1,15 +1,13 @@
 import os
 import json
 import psutil
-from subprocess import PIPE
+import logging
 
 import tornado.web
 import tornado.process
 import tornado.template
 
 import conf
-
-STREAM = tornado.process.Subprocess.STREAM
 
 sopcast_process = None
 mplayer_process = None
@@ -29,6 +27,7 @@ def filtered_processes(*terms):
 def killgrep(*terms):
     for proc in filtered_processes(*terms):
         proc.kill()
+        logging.info('Killed process: %s, %s', proc.pid, proc.cmdline())
 
 
 class ConfigHandler(tornado.web.RequestHandler):
@@ -44,44 +43,24 @@ class ConfigHandler(tornado.web.RequestHandler):
 class ProcessHandler(tornado.web.RequestHandler):
         PROCESS_TERMS = NotImplemented
 
-        def get_global_process(self):
-            raise NotImplementedError
-
-        def set_global_process(self, proc):
-            raise NotImplementedError
+        def get_response(self, processes):
+            return {
+                'processes': [p.as_dict(['pid', 'cmdline']) for p in processes]
+            }
 
         def get(self):
-            proc = self.get_global_process()
-            if proc:
-                proc = psutil.Process(proc.pid)
-                return self.finish(proc.as_dict(['pid', 'cmdline']))
-            for proc in filtered_processes(*self.PROCESS_TERMS):
-                return self.finish(proc.as_dict(['pid', 'cmdline']))
-            self.finish({})
+            response = self.get_response(filtered_processes(*self.PROCESS_TERMS))
+            return self.finish(response)
 
         def post(self):
-            self._delete()
-            proc = tornado.process.Subprocess(self.get_command(),
-                                              stdout=STREAM, stderr=STREAM)
-            self.set_global_process(proc)
-            try:
-                self.finish(psutil.Process(proc.pid).as_dict(['pid', 'cmdline']))
-            except psutil.NoSuchProcess:
-                self.set_global_process(None)
-                self.set_status(400)
-                self.finish({})
-
-        def _delete(self):
-            proc = self.get_global_process()
-            if proc:
-                psutil.Process(proc.pid).kill()
-            else:
-                killgrep(*self.PROCESS_TERMS)
-            self.set_global_process(None)
+            killgrep(*self.PROCESS_TERMS)
+            proc = tornado.process.Subprocess(self.get_command())
+            logging.info('Started process: %s, %s', proc.pid, proc.cmdline())
+            return self.finish({})
 
         def delete(self):
-            self._delete()
-            self.finish({'status': 'ok'})
+            killgrep(*self.PROCESS_TERMS)
+            return self.finish({})
 
         def get_command(self):
             raise NotImplementedError
@@ -90,15 +69,6 @@ class ProcessHandler(tornado.web.RequestHandler):
 class SopcastHandler(ProcessHandler):
 
     PROCESS_TERMS = ['qemu', 'sopcast']
-
-    def get_global_process(self):
-        global sopcast_process
-        return sopcast_process
-
-    def set_global_process(self, proc):
-        global sopcast_process
-        sopcast_process = proc
-        return sopcast_process
 
     def get_args(self):
         data = json.loads(self.request.body)
@@ -128,17 +98,13 @@ class MplayerHandler(ProcessHandler):
 
     PROCESS_TERMS = ['omxplayer', 'mplayer']
 
-    def get_global_process(self):
-        global mplayer_process
-        return mplayer_process
-
-    def set_global_process(self, proc):
-        global mplayer_process
-        mplayer_process = proc
-        return mplayer_process
-
     def get_command(self):
-	data = json.loads(self.request.body)
+        data = json.loads(self.request.body)
+        url = (
+            data.get('mplayer_url', None) or
+            'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
+                                                 port=conf.DEFAULT_STREAMING_PORT)
+        )
         cmds = [
             'omxplayer',
             '--audio_fifo',
@@ -149,15 +115,29 @@ class MplayerHandler(ProcessHandler):
             '1',
             '--video_queue',
             '1',
-            data.get('mplayer_url', None) or 'http://{host}:{port}/tv.asf'.format(host=conf.DEFAULT_STREAMING_HOST,
-                                                                                  port=conf.DEFAULT_STREAMING_PORT),
+            url,
         ]
         return cmds
+
+
+class KillHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        data = json.loads(self.request.body)
+        pid = data.get('pid')
+        if not pid:
+            return self.finish({})
+        try:
+            psutil.Process(pid).kill()
+        except psutil.NoSuchProcess:
+            pass
+        self.finish({})
 
 handlers = (
     (r'/()', tornado.web.StaticFileHandler, {'path': os.path.join(conf.TEMPLATES_ROOT, 'index.html')}),
     (r'/api/config', ConfigHandler),
     (r'/api/sopcast', SopcastHandler),
     (r'/api/mplayer', MplayerHandler),
+    (r'/api/kill', KillHandler),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': conf.STATIC_ROOT}),
 )
