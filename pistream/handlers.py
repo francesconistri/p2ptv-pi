@@ -1,7 +1,6 @@
 import os
 import json
 import psutil
-import logging
 
 import tornado.web
 import tornado.process
@@ -27,7 +26,6 @@ def filtered_processes(*terms):
 def killgrep(*terms):
     for proc in filtered_processes(*terms):
         proc.kill()
-        logging.info('Killed process: %s, %s', proc.pid, proc.cmdline())
 
 
 class ConfigHandler(tornado.web.RequestHandler):
@@ -54,8 +52,7 @@ class ProcessHandler(tornado.web.RequestHandler):
 
         def post(self):
             killgrep(*self.PROCESS_TERMS)
-            proc = tornado.process.Subprocess(self.get_command())
-            logging.info('Started process: %s, %s', proc.pid, proc.cmdline())
+            tornado.process.Subprocess(self.get_command())
             return self.finish({})
 
         def delete(self):
