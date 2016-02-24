@@ -6,10 +6,14 @@ import tornado.web
 import tornado.process
 import tornado.template
 
+import anydbm
+
 import conf
 
 sopcast_process = None
 mplayer_process = None
+
+pistream_db = anydbm.open(conf.DB_PATH, 'c')
 
 
 def filtered_processes(*terms):
@@ -35,6 +39,16 @@ class ConfigHandler(tornado.web.RequestHandler):
             'DEFAULT_STREAMING_PORT': conf.DEFAULT_STREAMING_PORT,
             'DEFAULT_STREAMING_HOST': conf.DEFAULT_STREAMING_HOST,
             'DEFAULT_COMMUNICATION_PORT': conf.DEFAULT_COMMUNICATION_PORT,
+        })
+
+
+class SopcastUrlHandler(tornado.web.RequestHandler):
+
+    def get(self):
+
+        self.finish({
+            'data': [{'url': url, 'name': name}
+                     for url, name in pistream_db.iteritems()]
         })
 
 
@@ -78,6 +92,7 @@ class SopcastHandler(ProcessHandler):
 
     def get_command(self):
         args = self.get_args()
+        pistream_db[str(args['url'])] = str(args['url'])
         cmds = [
             os.path.join(conf.BASE_PATH, '..', 'sopcast/qemu-i386'),
             os.path.join(conf.BASE_PATH, '..', 'sopcast/lib/ld-linux.so.2'),
@@ -134,6 +149,7 @@ handlers = (
     (r'/()', tornado.web.StaticFileHandler, {'path': os.path.join(conf.TEMPLATES_ROOT, 'index.html')}),
     (r'/api/config', ConfigHandler),
     (r'/api/sopcast', SopcastHandler),
+    (r'/api/sopcast/url', SopcastUrlHandler),
     (r'/api/mplayer', MplayerHandler),
     (r'/api/kill', KillHandler),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': conf.STATIC_ROOT}),

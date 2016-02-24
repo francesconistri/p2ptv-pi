@@ -28,6 +28,17 @@
                     <div class="col-md-6">
                         <form>
                             <legend>Launch New Stream</legend>
+                            <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-        haspopup="true" aria-expanded="true">
+                                    Select a url
+                                <span class="caret"></span>
+                            </button>
+                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li ng-repeat="url in PiStreamCtl.sopcast_urls">
+                                    <a ng-click="PiStreamCtl.sopcast_url = url.url">{{url.name}}</a>
+                                </li>
+                              </ul>
+                            </div>
 
                             <div class="form-group">
 

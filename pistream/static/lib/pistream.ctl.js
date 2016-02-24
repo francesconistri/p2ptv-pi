@@ -8,8 +8,15 @@ function PiStreamCtl($q, $http, $interval) {
         self.config = null;
         self.sopcast = null;
         self.mplayer = null;
-
-        loadProcesses().then(function() {
+        self.sopcast_urls = [];
+        loadSopcastUrls();
+        $http.get('/api/config')
+            .then(
+            function(r) {
+                self.config = r.data;
+            })
+            .then(loadProcesses)
+            .then(function() {
             self.loaded = true;
         });
 
@@ -27,16 +34,18 @@ function PiStreamCtl($q, $http, $interval) {
                 .then(function(r) {
                     self.mplayer = r.data;
                 }),
-            $http.get('/api/config')
-                .then(
-                function(r) {
-                    self.config = r.data;
-                })
         ]);
     }
 
+    var loadSopcastUrls = function() {
+        $http.get('/api/sopcast/url')
+            .then(function(r) {
+                self.sopcast_urls = r.data.data;
+            })
+    };
+
     self.launchSopcast = function() {
-        $http.post('/api/sopcast', {url: self.sopcast_url}).then(loadProcesses);
+        $http.post('/api/sopcast', {url: self.sopcast_url}).then(loadProcesses).then(loadSopcastUrls);
     };
 
     self.launchMplayer = function() {
