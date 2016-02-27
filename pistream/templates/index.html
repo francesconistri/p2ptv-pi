@@ -20,7 +20,13 @@
     <body ng-cloak>
         <div class="jumbotron" ng-controller="pistream.PiStreamCtl as PiStreamCtl">
             <div class="container" ng-if="PiStreamCtl.loaded">
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <a ng-href="PiStreamCtl.getStreamingUrl()">
+                            <h1>{{ PiStreamCtl.getStreamingUrl() }}</h1>
+                        </a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <h2>Sopcast: </h2>
