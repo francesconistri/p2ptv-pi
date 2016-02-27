@@ -1,0 +1,1 @@
+module.exports = require("npm:tsml@1.0.1/tsml.js");

@@ -19,12 +19,19 @@
 
     <body ng-cloak>
         <div class="jumbotron" ng-controller="pistream.PiStreamCtl as PiStreamCtl">
-            <div class="container" ng-if="PiStreamCtl.loaded">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <a ng-href="{{ PiStreamCtl.getStreamingUrl()}} ">
                             <h1>{{ PiStreamCtl.getStreamingUrl() }}</h1>
                         </a>
+                    </div>
+                    <div class="col-md-12">
+                        <video id="sopcast-video" class="video-js vjs-default-skin" controls
+                          vjs-video>
+                            <source ng-src="{{ PiStreamCtl.getStreamingUrl() }}" type='video/mp4' />
+
+                        </video>
                     </div>
                 </div>
                 <div class="row">

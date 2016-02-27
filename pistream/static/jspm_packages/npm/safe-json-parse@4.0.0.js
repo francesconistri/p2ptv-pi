@@ -1,0 +1,1 @@
+module.exports = require("npm:safe-json-parse@4.0.0/callback");

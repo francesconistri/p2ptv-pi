@@ -1,0 +1,1 @@
+module.exports = require("npm:video.js@5.7.1/dist/video.js");

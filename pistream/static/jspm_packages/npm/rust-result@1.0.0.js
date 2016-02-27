@@ -1,0 +1,1 @@
+module.exports = require("npm:rust-result@1.0.0/index");

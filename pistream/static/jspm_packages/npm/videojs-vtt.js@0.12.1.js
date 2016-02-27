@@ -1,0 +1,1 @@
+module.exports = require("npm:videojs-vtt.js@0.12.1/lib/index.js");

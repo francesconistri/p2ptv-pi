@@ -1,0 +1,1 @@
+module.exports = require("npm:vjs-video@0.1.5/dist/vjs-video.min.js");
