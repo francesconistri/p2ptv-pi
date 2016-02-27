@@ -37,7 +37,7 @@ class ConfigHandler(tornado.web.RequestHandler):
     def get(self):
         self.finish({
             'DEFAULT_STREAMING_PORT': conf.DEFAULT_STREAMING_PORT,
-            'DEFAULT_STREAMING_HOST': conf.DEFAULT_STREAMING_HOST,
+            'DEFAULT_STREAMING_HOST': psutil.net_if_addrs()['eth0'][0].address,
             'DEFAULT_COMMUNICATION_PORT': conf.DEFAULT_COMMUNICATION_PORT,
         })
 
