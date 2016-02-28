@@ -27,7 +27,7 @@
                             <h1>{{ PiStreamCtl.getStreamingUrl() }}</h1>
                         </a>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" ng-if="PiStreamCtl.loaded">
                         <video id="my-video" class="video-js vjs-default-skin" controls
                                 data-setup='{"preload": "none"}' width="300">
                           <source ng-src="{{ PiStreamCtl.getStreamingUrl() }}" type='video/mp4'>
