@@ -66,7 +66,7 @@ def fast_deploy():
 
 
 @roles('pi')
-def pull(self):
+def pull():
     with prefix(env.VIRTUALENV_ACTIVATE):
         with cd(env.APPLICATION_PATH):
             run('git reset --hard')

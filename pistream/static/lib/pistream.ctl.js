@@ -64,7 +64,7 @@ function PiStreamCtl($q, $http, $interval, $sce) {
         if (!self.config) {
             return '/static/video.mp4';
         }
-        return $sce.trustAsUrl(
+        return $sce.trustAsResourceUrl(
             'http://' +
             self.config.DEFAULT_STREAMING_HOST +
             ':' + self.config.DEFAULT_STREAMING_PORT +
