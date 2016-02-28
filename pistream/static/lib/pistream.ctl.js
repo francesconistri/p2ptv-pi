@@ -1,4 +1,4 @@
-function PiStreamCtl($q, $http, $interval) {
+function PiStreamCtl($q, $http, $interval, $sce) {
     var self = this;
 
     var init = function()  {
@@ -64,7 +64,7 @@ function PiStreamCtl($q, $http, $interval) {
         if (!self.config) {
             return '/static/video.mp4';
         }
-        return (
+        return $sce.trustAsUrl(
             'http://' +
             self.config.DEFAULT_STREAMING_HOST +
             ':' + self.config.DEFAULT_STREAMING_PORT +
@@ -75,6 +75,6 @@ function PiStreamCtl($q, $http, $interval) {
     init()
 }
 
-PiStreamCtl.$inject = ['$q', '$http', '$interval'];
+PiStreamCtl.$inject = ['$q', '$http', '$interval', '$sce'];
 
 export default PiStreamCtl;

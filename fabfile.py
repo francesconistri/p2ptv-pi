@@ -61,7 +61,16 @@ def fast_deploy():
             run('git pull origin master')
             run(r"find . -name '*\.pyc' -delete")
     run('pkill {} || /bin/true'.format(PYTHON, MAIN))
+    run('pkill -f dtach')
     run('dtach -n /tmp/pistream.dtach {} {}'.format(PYTHON, MAIN))
+
+
+@roles('pi')
+def pull(self):
+    with prefix(env.VIRTUALENV_ACTIVATE):
+        with cd(env.APPLICATION_PATH):
+            run('git reset --hard')
+            run('git pull origin master')
 
 
 ###########
