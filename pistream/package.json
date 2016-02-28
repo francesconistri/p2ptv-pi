@@ -8,8 +8,7 @@
       "angular-route": "github:angular/bower-angular-route@^1.5.0",
       "bootstrap": "github:twbs/bootstrap@^3.3.6",
       "css": "github:systemjs/plugin-css@^0.1.20",
-      "video.js": "npm:video.js@^5.7.1",
-      "vjs-video": "npm:vjs-video@^0.1.5"
+      "video.js": "npm:video.js@^5.7.1"
     },
     "devDependencies": {
       "traceur": "github:jmcriffey/bower-traceur@0.0.93",

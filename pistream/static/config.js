@@ -15,7 +15,6 @@ System.config({
     "traceur": "github:jmcriffey/bower-traceur@0.0.93",
     "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.93",
     "video.js": "npm:video.js@5.7.1",
-    "vjs-video": "npm:vjs-video@0.1.5",
     "github:angular/bower-angular-route@1.5.0": {
       "angular": "github:angular/bower-angular@1.5.0"
     },
@@ -128,10 +127,6 @@ System.config({
     },
     "npm:videojs-vtt.js@0.12.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:vjs-video@0.1.5": {
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
     "npm:xhr@2.2.0": {
       "global": "npm:global@4.3.0",

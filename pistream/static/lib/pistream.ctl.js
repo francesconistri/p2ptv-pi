@@ -61,6 +61,9 @@ function PiStreamCtl($q, $http, $interval) {
     }
 
     self.getStreamingUrl = function() {
+        if (!self.config) {
+            return '/static/video.mp4';
+        }
         return (
             'http://' +
             self.config.DEFAULT_STREAMING_HOST +

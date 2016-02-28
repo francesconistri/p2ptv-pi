@@ -10,10 +10,6 @@
     "jquery": "github:components/jquery"
   },
   "github:components/jquery@2.2.0": {},
-  "npm:vjs-video@0.1.5": {
-    "systemjs-json": "github:systemjs/plugin-json@^0.1.0",
-    "process": "github:jspm/nodelibs-process@^0.1.0"
-  },
   "github:systemjs/plugin-json@0.1.0": {},
   "github:jspm/nodelibs-process@0.1.2": {
     "process": "npm:process@^0.11.0"
